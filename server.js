@@ -57,14 +57,27 @@ app.get('/year/:selected_year', (req, res) => {
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT * FROM COUNTRIES';
+        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, (err, rows) => {
             console.log(err);
             console.log(rows);
 
+            if(err) {
+                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.write('ERROR file not found');
+                res.end();
+            } else {
+                let response = template.toString();
+                response = response.replace('%%YEAR%%', req.params.selected_year);
+                
+                
+                
+                res.status(200).type('html').send(response); // <-- you may need to change this
+            }
+
         });
-        res.status(200).type('html').send(template); // <-- you may need to change this
+       
     });
 });
 
