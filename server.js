@@ -6,6 +6,10 @@ let path = require('path');
 let express = require('express');
 let sqlite3 = require('sqlite3');
 
+// Chart.js
+//const Chart = require('chart.js');
+//const myChart = new Chart(ctx, {...});
+
 
 let public_dir = path.join(__dirname, 'public');
 let template_dir = path.join(__dirname, 'templates');
@@ -46,6 +50,25 @@ app.get('/year/:selected_year', (req, res) => {
     });
 });
 */
+
+//GET request handler for CO2 levels of all countries in specified year - Maddie
+app.get('/year/:selected_year', (req, res) => {
+    console.log(req.params.selected_year);
+    fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
+        // modify `template` and send response
+        // this will require a query to the SQL database
+        let query = 'SELECT * FROM COUNTRIES';
+        //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
+        db.all(query, (err, rows) => {
+            console.log(err);
+            console.log(rows);
+
+        });
+        res.status(200).type('html').send(template); // <-- you may need to change this
+    });
+});
+
+
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
