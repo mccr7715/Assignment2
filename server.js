@@ -62,7 +62,7 @@ app.get('/year/:selected_year', (req, res) => {
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, (err, rows) => {
             console.log(err);
@@ -85,13 +85,13 @@ app.get('/year/:selected_year', (req, res) => {
                let country_data = '';
               
                // --> 48 is the limit for bar chart - fix: add more charts <-- otherwise no chart will show
-               for (i = 0; count < 48; i++) {
-               // for (i = 0; i < rows.length; i++) {
+               //for (i = 1; count < 47; i++) {
+               for (i = 0; i < rows.length; i++) {
                 if (req.params.selected_year == rows[i].year) {
 
                     // just here to see if the right information is print - check values__________
-                    country_table = country_table + '<tr><td>' + rows[i].country + '</td>';
-                    country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
+            //        country_table = country_table + '<tr><td>' + rows[i].country_code + '</td>';
+            //        country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
                     // ___________________________________________________________________________
 
                     //This is the part that replaces the script in chart.js
@@ -111,15 +111,16 @@ app.get('/year/:selected_year', (req, res) => {
                     //  by wrapping the replace in double quotes where --HERE-- is below
 
                     if (count == 0) {
-                        labels = labels + rows[i].country;
+                        labels = labels + rows[i].country_code;
                         country_data = country_data + rows[i].cumulative_co2;
                     } else {
                     
                         // then after first row print out the rest
-                        labels =labels +  "', '" + rows[i].country;
+                        labels =labels +  "', '" + rows[i].country_code;
                         country_data = country_data +   ", " + rows[i].cumulative_co2;
                     } 
                     count++;
+                
                     // __________________________________________________________
                 }  
 
@@ -127,7 +128,7 @@ app.get('/year/:selected_year', (req, res) => {
             
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
-               response = response.replace('%%DATA%%', country_table);
+               //response = response.replace('%%DATA%%', country_table);
                response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
                response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
                //console.log(labels);

@@ -4,6 +4,10 @@ body {
     text-align: center;
 }
 
+p{
+    font-size: 200%;
+}
+
 button{
     font-family:'Times New Roman', Times, serif;
     font-size: 150%;

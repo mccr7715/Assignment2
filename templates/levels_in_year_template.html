@@ -39,54 +39,48 @@
 
   <table>
     <tbody>
-      %%DATA%%
+      <!--%%DATA%%-->
     </tbody>
   </table>
 
 
-  <canvas id="myChart" width="400" height="400"></canvas>
-  <div>
-    <canvas id="myChart"></canvas>
+  
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <canvas id="myChart" height="1000"></canvas>
     <script>
-      // the chart.js replacement occurs HERE ----------------------------------------------------
-      const labels = [
-        '%%COUNTRIES%%'
-      ];
-
-      const data = {
-        labels: labels,
+      const ctx = document.getElementById('myChart');
+      const myChart = new Chart(ctx, { 
+      type: 'bar',
+      data: {
+        // the chart.js replacement occurs HERE ----------------------------------------------------
+        labels: labels = ['%%COUNTRIES%%'],
         datasets: [{
-          label: 'My First dataset',
-          backgroundColor: 'rgb(81, 189, 201)',
-          borderColor: 'rgb(255, 99, 132)',
-          // and HERE -----------------------------------------------------------------------
-          data: ['%%COUNTRY_DATA%%'],
+            label: 'CO2 in countries',
+            // and HERE -----------------------------------------------------------------------
+            data: ['%%COUNTRY_DATA%%'],
+            backgroundColor: [
+            'rgb(81, 189, 201)'
+            ],
+            borderColor: [
+            'rgb(81, 189, 201)'
+            ],
+            borderWidth: 1
         }]
-      };
+        
+    },
+    options: {
 
-      const config = {
-        type: 'bar',
-        data: data,
-        options: {
-          indexAxis: 'y',
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
+      indexAxis: 'y',
+      scales: {
+        y:{
+          offset:true,
         }
-      };
-    </script>
-    <script>
-      const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
-    </script>
-
-  </div>
-
+      }
+    }
+  
+  });
+  </script>
 
   <script src="js/vendor.js"></script>
   <script src="js/foundation.js"></script>
