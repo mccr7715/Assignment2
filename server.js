@@ -198,14 +198,9 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-<<<<<<< HEAD
         let query = 'SELECT Gasses.country, Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
-=======
-        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
->>>>>>> a99b2814fd15260f6bab1174a7e05fad39610473
         
         db.all(query, (err, rows) => {
-            console.log(req.params.income);
             
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -215,25 +210,22 @@ app.get('/emissions/:income', (req, res) => {
 
                 let response = template.toString();
                 let name = '';
-                if(req.params.income == 'upper') {
+                let value;
+                if(req.params.income == 'upper' || req.params.income == '3') {
                     name = 'Upper-middle-income countries';
-                } else if(req.params.income=='low') {
+                    value = 3;
+                } else if(req.params.income=='low' || req.params.income == '1') {
                     name = 'Low-income countries';
-                } else if(req.params.income == 'lower') {
+                    value = 1;
+                } else if(req.params.income == 'lower' || req.params.income == '2') {
                     name = 'Lower-middle-income countries';
+                    value = 2;
                 } else {
                     name = 'High-income countries';
+                    value = 4;
                 }
                 response = response.replace('%%INCOME_LEVEL%%', name);
                 
-
-                // while(rows[i].country_code == 'HIC' || rows[i].country_code == 'UMC' || rows[i].country_code == 'LOC' || rows[i].country_code == 'LMC'){
-                //     i++;
-                // }
-
-                // if(rows[i].country_code == 'HIC') {
-                    
-                // }
 
                 let count = 0;
                 let labels='';
@@ -259,8 +251,8 @@ app.get('/emissions/:income', (req, res) => {
                 console.log(count);
                 response = response.replace('%%YEAR%%', labels);
                 response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
-                //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
-               // response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
+                response = response.replace('%%PREVIOUS%%', parseInt(value) - parseInt(1)); //previous button
+                response = response.replace('%%NEXT%%', parseInt(value) + parseInt(1)); //next button
                 res.status(200).type('html').send(response);
             }
         });
