@@ -198,7 +198,7 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-        let query = 'SELECT Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         
         db.all(query, (err, rows) => {
             
@@ -230,7 +230,9 @@ app.get('/emissions/:income', (req, res) => {
                         if (count == 0) {
                             labels = labels + rows[i].year;
                             country_data = country_data + rows[i].cumulative_co2;
+                            console.log(rows[i].year);
                         } else {
+                            console.log(rows[i]);
                             labels =labels +  "', '" + rows[i].year;
                             country_data = country_data +   ", " + rows[i].cumulative_co2;
                         }
