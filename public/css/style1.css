@@ -1,7 +1,14 @@
 body {
-    background-color: rgb(81, 189, 201);
+    background-color: rgb(182, 205, 207);
     color: black;
     text-align: center;
+}
+
+button{
+    font-family:'Times New Roman', Times, serif;
+    font-size: 150%;
+    background-color: rgb(131, 149, 150);
+    padding: .5%;
 }
 
 h1{
@@ -18,5 +25,5 @@ a {
     font-size: 200%;
     text-align: center;
 }
-a:visited{color: darkslategrey}
+a:visited{color: rgb(47, 79, 79)}
 a:hover, a:active{color: #FFFDD0;}

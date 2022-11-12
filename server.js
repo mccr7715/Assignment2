@@ -57,6 +57,7 @@ app.get('/home.html', (req, res) => {
 
 // GET request handler for CO2 levels of all countries in specified year - Maddie
 app.get('/year/:selected_year', (req, res) => {
+
     console.log(req.params.selected_year);
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
         // modify `template` and send response
@@ -65,7 +66,7 @@ app.get('/year/:selected_year', (req, res) => {
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, (err, rows) => {
             console.log(err);
-            console.log(rows);
+            //console.log(rows);
 
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -127,10 +128,10 @@ app.get('/year/:selected_year', (req, res) => {
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
                response = response.replace('%%DATA%%', country_table);
-                
-               
-               console.log(labels);
-               console.log(country_data);
+               response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
+               response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
+               //console.log(labels);
+               //console.log(country_data);
                res.status(200).type('html').send(response); // <-- you may need to change this
             }
 
