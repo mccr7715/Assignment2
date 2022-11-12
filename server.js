@@ -190,10 +190,10 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-        let query = 'SELECT Gasses.country as income, Gasses.year, \
-        Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.income = ?';
-        let income = req.params.income;
-        /*if(input=='high') {
+        let query = 'SELECT Gasses.country as income, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+
+       /* let input = req.params.income;
+        if(input=='high') {
             let income = 'High-income countries';
         } else if(input=='low') {
             let income = 'Low-income countries';
@@ -202,24 +202,38 @@ app.get('/emissions/:income', (req, res) => {
         } else {
             let income = 'Upper-middle-income countries';
         }*/
-        db.all(query, [income], (err, rows) => {
+        
+        db.all(query, (err, rows) => {
+            
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
                 res.write('ERROR file not found');
                 res.end();
             } else {
+
                 let response = template.toString();
-                response = response.replace('%%INCOME_LEVEL%%', rows[0].income);
+                response = response.replace('%%INCOME_LEVEL%%', req.params.income);
+                
 
-                let cereal_table = '';
-                let i;
+                let count = 0;
+                let labels='';
+                let country_data = '';
                 for(i=0; i<rows.length; i++) {
-                    cereal_table = cereal_table + '<tr><td>' + rows[i].year + '</td>';
-                    cereal_table = cereal_table + '<td>' + rows[i].co2 + '</td>';
-                    cereal_table = cereal_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
+                    if(rows[i].country_code = 'HIC' && req.params.income == 'high') {
+                        if (count == 0) {
+                            labels = labels + rows[i].year;
+                            country_data = country_data + rows[i].cumulative_co2;
+                        } else {
+                            labels =labels +  "', '" + rows[i].year;
+                            country_data = country_data +   ", " + rows[i].cumulative_co2;
+                        }
+                        count++;
+                    }
                 }
-                response = response.replace('%%EMISSION_INFO%%', cereal_table);
-
+                response = response.replace('%%YEAR%%', labels);
+                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
+                //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
+               // response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
                 res.status(200).type('html').send(response);
             }
         });
