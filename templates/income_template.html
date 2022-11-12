@@ -33,7 +33,7 @@
   <script>
     const ctx = document.getElementById('myChart');
     const myChart = new Chart(ctx, { 
-    type: 'bar',
+    type: 'line',
     data: {
       // the chart.js replacement occurs HERE ----------------------------------------------------
       labels: labels = ['%%YEAR%%'],
@@ -57,7 +57,7 @@
           display: false
        }
     },
-    indexAxis: 'y',
+    indexAxis: 'x',
     scales: {
       y:{
         offset:true,
