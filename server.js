@@ -197,18 +197,7 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-        let query = 'SELECT Gasses.country as income, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
-
-       /* let input = req.params.income;
-        if(input=='high') {
-            let income = 'High-income countries';
-        } else if(input=='low') {
-            let income = 'Low-income countries';
-        } else if(input == 'lower' || input == 'middle') {
-            let income = 'Lower-middle-income countries';
-        } else {
-            let income = 'Upper-middle-income countries';
-        }*/
+        let query = 'SELECT Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         
         db.all(query, (err, rows) => {
             
@@ -219,14 +208,24 @@ app.get('/emissions/:income', (req, res) => {
             } else {
 
                 let response = template.toString();
-                response = response.replace('%%INCOME_LEVEL%%', req.params.income);
+                let name = '';
+                if(req.params.income == 'upper') {
+                    name = 'Upper-middle-income countries';
+                } else if(req.params.income=='low') {
+                    name = 'Low-income countries';
+                } else if(req.params.income == 'lower') {
+                    name = 'Lower-middle-income countries';
+                } else {
+                    name = 'High-income countries';
+                }
+                response = response.replace('%%INCOME_LEVEL%%', name);
                 
 
                 let count = 0;
                 let labels='';
                 let country_data = '';
                 for(i=0; i<rows.length; i++) {
-                    if(rows[i].country_code = 'HIC' && req.params.income == 'high') {
+                    if(rows[i].country = name) {
                         if (count == 0) {
                             labels = labels + rows[i].year;
                             country_data = country_data + rows[i].cumulative_co2;
