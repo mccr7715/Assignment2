@@ -226,7 +226,6 @@ app.get('/emissions/:income', (req, res) => {
                 }
                 response = response.replace('%%INCOME_LEVEL%%', name);
                 
-
                 let count = 0;
                 let labels='';
                 let country_data = '';
@@ -245,10 +244,7 @@ app.get('/emissions/:income', (req, res) => {
                     }
                 }
 
-                console.log(rows);
-                console.log(labels);
-                console.log(country_data);
-                console.log(count);
+                
                 response = response.replace('%%YEAR%%', labels);
                 response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
                 response = response.replace('%%PREVIOUS%%', parseInt(value) - parseInt(1)); //previous button
