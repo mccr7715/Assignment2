@@ -238,7 +238,6 @@ app.get('/emissions/:income', (req, res) => {
                             labels =labels +  "', '" + rows[i].year;
                             country_data = country_data +   ", " + rows[i].cumulative_co2;
                         }
-                        console.log(labels);
                         count++;
                         i++;
                     }
