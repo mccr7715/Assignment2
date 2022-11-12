@@ -7,6 +7,31 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+    <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="cell large-3"><a href="http://localhost:8000/">Home</a></div>
+          <div class="cell large-3"><a href="http://localhost:8000/country/AFG">CO2 Levels in a Country Over Time</a></div>
+          <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div><!--start at recent and work back-->
+          <div class="cell large-3"><a href="http://localhost:8000/emissions/high">CO2 Levels by Country Income</a></div>
+        </div>
+      </div>
+
+    <h1>CO2 Levels in a Country Over Time %%COUNTRY%%</h1>
+
+    <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="cell large-6"><a href="http://localhost:8000/year/%%PREVIOUS%%">previous</a></div>
+          <div class="cell large-6"><a href="http://localhost:8000/year/%%NEXT%%">next</a></div>
+        </div>
+      </div>
+
+      <table>
+        <tbody>
+          <!--%%DATA%%-->
+        </tbody>
+      </table>
+
     <div id="content">
         <img id="country_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />
         <h1 id="country_name">%%COUNTRY%%</h1>
@@ -26,4 +51,60 @@
             </tbody>
         </table>
 </body>
+</html>
+
+
+  <table>
+    <tbody>
+      <!--%%DATA%%-->
+    </tbody>
+  </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <canvas id="myChart" height="1000"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart');
+        const myChart = new Chart(ctx, { 
+        type: 'bar',
+        data: {
+        // the chart.js replacement occurs HERE ----------------------------------------------------
+        labels: labels = ['%%COUNTRIES%%'],
+        datasets: [{
+            label: 'CO2 in countries',
+            // and HERE -----------------------------------------------------------------------
+            data: ['%%COUNTRY_DATA%%'],
+            backgroundColor: [
+            'rgb(81, 189, 201)'
+            ],
+            borderColor: [
+            'rgb(81, 189, 201)'
+            ],
+            borderWidth: 1
+        }]
+      
+    },
+    options: {
+        plugins: {
+        legend: {
+            display: false
+        }
+        },
+    indexAxis: 'y',
+        scales: {
+        y:{
+            offset:true,
+    }
+    }
+    }
+
+    });
+    </script>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/foundation.js"></script>
+    <script type="application/javascript">
+    $(document).foundation();
+    </script>
+</body>
+
 </html>

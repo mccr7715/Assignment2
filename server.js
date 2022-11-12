@@ -167,9 +167,10 @@ app.get('/country/:selected_country', (req, res) => {
             }
 
             else if (rows.length == 0){
-                res.writeHead(404, {'Content-Type': 'text/plain'});
+                //res.writeHead(404, {'Content-Type': 'text/plain'});
                 res.write('ERROR data not found for country ' + cid.toUpperCase());
                 res.end();
+                return
             }
             
             else {
