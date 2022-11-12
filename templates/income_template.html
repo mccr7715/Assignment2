@@ -4,24 +4,75 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Emissions by Income</title>
-    <link rel="stylesheet" href="/css/style.css">
+     <link rel="stylesheet" href="/css/foundation.css">
+     <link rel="stylesheet" href="/css/style1.css" />
 </head>
 <body>
-    <div id="content">
-        <h1 id="income_level">%%INCOME_LEVEL%%</h1>
-        <div class="clear"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th class="cereal_title">Emissions By Income</th>
-                    <th>Year</th>
-                    <th>Co2</th>
-                    <th>Cumulative Co2</th>
-                </tr>
-            </thead>
-            <tbody>
-                %%EMISSION_INFO%%
-            </tbody>
-        </table>
+    
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="cell large-3"><a href="http://localhost:8000/">Home</a></div>
+      <div class="cell large-3"><a href="http://localhost:8000/country/AFG">CO2 Levels in a Country Over Time</a></div>
+      <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div><!--start at recent and work back-->
+      <div class="cell large-3"><a href="http://localhost:8000/emissions/high">CO2 Levels by Country Income</a></div>
+    </div>
+  </div>
+
+  <h1>CO2 Emissions by %%INCOME_LEVEL%%</h1>
+
+
+  <!--<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="cell large-6"><a href="http://localhost:8000/emissions/%%PREVIOUS%%">previous</a></div>
+      <div class="cell large-6"><a href="http://localhost:8000/emissions/%%NEXT%%">next</a></div>
+    </div>
+  </div>-->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <canvas id="myChart" height="1000"></canvas>
+  <script>
+    const ctx = document.getElementById('myChart');
+    const myChart = new Chart(ctx, { 
+    type: 'bar',
+    data: {
+      // the chart.js replacement occurs HERE ----------------------------------------------------
+      labels: labels = ['%%YEAR%%'],
+      datasets: [{
+          label: 'CO2 Emissions',
+          // and HERE -----------------------------------------------------------------------
+          data: ['%%COUNTRY_DATA%%'],
+          backgroundColor: [
+          'rgb(255, 0, 0)'
+          ],
+          borderColor: [
+          'rgb(81, 189, 201)'
+          ],
+          borderWidth: 1
+      }]
+      
+  },
+  options: {
+    plugins: {
+       legend: {
+          display: false
+       }
+    },
+    indexAxis: 'y',
+    scales: {
+      y:{
+        offset:true,
+      }
+    }
+  }
+
+});
+</script>
+
+<script src="js/vendor.js"></script>
+<script src="js/foundation.js"></script>
+<script type="application/javascript">
+  $(document).foundation();
+</script>
+
 </body>
 </html>

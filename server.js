@@ -62,7 +62,7 @@ app.get('/year/:selected_year', (req, res) => {
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, (err, rows) => {
             console.log(err);
@@ -80,18 +80,25 @@ app.get('/year/:selected_year', (req, res) => {
                
 
                let count = 0;
-               let country_table = '';
+               //let country_table = '';
                let labels = '';
                let country_data = '';
               
-               // --> 48 is the limit for bar chart - fix: add more charts <-- otherwise no chart will show
-               for (i = 0; count < 48; i++) {
-               // for (i = 0; i < rows.length; i++) {
+               // --> 48 is the limit for bar chart - Issue : was the ' in one of the country names
+               //for (i = 1; count < 47; i++) {
+               for (i = 0; i < rows.length; i++) {
+
+                // skip country combined by income rows
+                while(rows[i].country_code == 'HIC' || rows[i].country_code == 'UMC' || rows[i].country_code == 'LOC' || rows[i].country_code == 'LMC'){
+                    i++;
+                }
+
                 if (req.params.selected_year == rows[i].year) {
 
                     // just here to see if the right information is print - check values__________
-                    country_table = country_table + '<tr><td>' + rows[i].country + '</td>';
-                    country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
+                    
+            //        country_table = country_table + '<tr><td>' + rows[i].country_code + '</td>';
+            //        country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
                     // ___________________________________________________________________________
 
                     //This is the part that replaces the script in chart.js
@@ -111,15 +118,16 @@ app.get('/year/:selected_year', (req, res) => {
                     //  by wrapping the replace in double quotes where --HERE-- is below
 
                     if (count == 0) {
-                        labels = labels + rows[i].country;
+                        labels = labels + rows[i].country_code;
                         country_data = country_data + rows[i].cumulative_co2;
                     } else {
                     
                         // then after first row print out the rest
-                        labels =labels +  "', '" + rows[i].country;
+                        labels =labels +  "', '" + rows[i].country_code;
                         country_data = country_data +   ", " + rows[i].cumulative_co2;
                     } 
                     count++;
+                
                     // __________________________________________________________
                 }  
 
@@ -127,7 +135,7 @@ app.get('/year/:selected_year', (req, res) => {
             
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
-               response = response.replace('%%DATA%%', country_table);
+               //response = response.replace('%%DATA%%', country_table);
                response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
                response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
                //console.log(labels);
@@ -190,10 +198,10 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-        let query = 'SELECT Gasses.country as income, Gasses.year, \
-        Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.income = ?';
-        let income = req.params.income;
-        /*if(input=='high') {
+        let query = 'SELECT Gasses.country as income, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+
+       /* let input = req.params.income;
+        if(input=='high') {
             let income = 'High-income countries';
         } else if(input=='low') {
             let income = 'Low-income countries';
@@ -202,24 +210,38 @@ app.get('/emissions/:income', (req, res) => {
         } else {
             let income = 'Upper-middle-income countries';
         }*/
-        db.all(query, [income], (err, rows) => {
+        
+        db.all(query, (err, rows) => {
+            
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
                 res.write('ERROR file not found');
                 res.end();
             } else {
+
                 let response = template.toString();
-                response = response.replace('%%INCOME_LEVEL%%', rows[0].income);
+                response = response.replace('%%INCOME_LEVEL%%', req.params.income);
+                
 
-                let cereal_table = '';
-                let i;
+                let count = 0;
+                let labels='';
+                let country_data = '';
                 for(i=0; i<rows.length; i++) {
-                    cereal_table = cereal_table + '<tr><td>' + rows[i].year + '</td>';
-                    cereal_table = cereal_table + '<td>' + rows[i].co2 + '</td>';
-                    cereal_table = cereal_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
+                    if(rows[i].country_code = 'HIC' && req.params.income == 'high') {
+                        if (count == 0) {
+                            labels = labels + rows[i].year;
+                            country_data = country_data + rows[i].cumulative_co2;
+                        } else {
+                            labels =labels +  "', '" + rows[i].year;
+                            country_data = country_data +   ", " + rows[i].cumulative_co2;
+                        }
+                        count++;
+                    }
                 }
-                response = response.replace('%%EMISSION_INFO%%', cereal_table);
-
+                response = response.replace('%%YEAR%%', labels);
+                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
+                //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
+               // response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
                 res.status(200).type('html').send(response);
             }
         });
