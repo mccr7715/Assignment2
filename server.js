@@ -230,12 +230,11 @@ app.get('/emissions/:income', (req, res) => {
                         if (count == 0) {
                             labels = labels + rows[i].year;
                             country_data = country_data + rows[i].cumulative_co2;
-                            console.log(rows[i].year);
                         } else {
-                            console.log(rows[i]);
                             labels =labels +  "', '" + rows[i].year;
                             country_data = country_data +   ", " + rows[i].cumulative_co2;
                         }
+                        console.log(labels);
                         count++;
                     }
                 }
