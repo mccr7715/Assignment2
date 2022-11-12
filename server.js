@@ -80,16 +80,23 @@ app.get('/year/:selected_year', (req, res) => {
                
 
                let count = 0;
-               let country_table = '';
+               //let country_table = '';
                let labels = '';
                let country_data = '';
               
-               // --> 48 is the limit for bar chart - fix: add more charts <-- otherwise no chart will show
+               // --> 48 is the limit for bar chart - Issue : was the ' in one of the country names
                //for (i = 1; count < 47; i++) {
                for (i = 0; i < rows.length; i++) {
+
+                // skip country combined by income rows
+                while(rows[i].country_code == 'HIC' || rows[i].country_code == 'UMC' || rows[i].country_code == 'LOC' || rows[i].country_code == 'LMC'){
+                    i++;
+                }
+
                 if (req.params.selected_year == rows[i].year) {
 
                     // just here to see if the right information is print - check values__________
+                    
             //        country_table = country_table + '<tr><td>' + rows[i].country_code + '</td>';
             //        country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
                     // ___________________________________________________________________________

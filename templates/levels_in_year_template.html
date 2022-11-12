@@ -19,10 +19,9 @@
   <div class="grid-container">
     <div class="grid-x grid-padding-x">
       <div class="cell large-3"><a href="http://localhost:8000/">Home</a></div>
-      <div class="cell large-3"><a href="./index.html">CO2 Levels in a Country Over Time</a></div>
-      <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div>
-      <!--start at recent and work back-->
-      <div class="cell large-3"><a href="./projects.html">CO2 Levels by Country Income</a></div>
+      <div class="cell large-3"><a href="http://localhost:8000/country/AFG">CO2 Levels in a Country Over Time</a></div>
+      <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div><!--start at recent and work back-->
+      <div class="cell large-3"><a href="http://localhost:8000/emissions/high">CO2 Levels by Country Income</a></div>
     </div>
   </div>
 
@@ -70,7 +69,11 @@
         
     },
     options: {
-
+      plugins: {
+         legend: {
+            display: false
+         }
+      },
       indexAxis: 'y',
       scales: {
         y:{
