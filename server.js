@@ -148,6 +148,7 @@ app.get('/year/:selected_year', (req, res) => {
     });
 });
 
+//Carynn country route
 app.get('/country/:selected_country', (req, res) => {
     console.log(req.params.selected_country);
     fs.readFile(path.join(template_dir, 'country_template.html'), (err, template) => {
