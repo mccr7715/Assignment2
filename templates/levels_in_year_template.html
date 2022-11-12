@@ -6,16 +6,63 @@
 	<title>CO2 in year by country</title>
     <link rel="stylesheet" href="/public/css/foundation.css">
     <link rel="stylesheet" href="/public/css/style1.css"/>
-   <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
+    
     
 </head>
 <body>
     
-        <h1>hi</h1>
-        <h1>%%YEAR%%</h1>
+        <h1>CO2 levels in all countries in %%YEAR%%</h1>
+        <table>
+            <tbody>
+                %%DATA%%
+            </tbody>
+        </table>
+    
+    
+        <canvas id="myChart" width="400" height="400"></canvas>
+    <div>
+        <canvas id="myChart"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // the chart.js replacement occurs HERE ----------------------------------------------------
+            const labels = [
+                '%%COUNTRIES%%'
+            ];
+            
+            const data = {
+              labels: labels,
+              datasets: [{
+                label: 'My First dataset',
+                backgroundColor: 'rgb(81, 189, 201)',
+                borderColor: 'rgb(255, 99, 132)',
+                 // and HERE -----------------------------------------------------------------------
+                data: ['%%COUNTRY_DATA%%'],
+              }]
+            };
+          
+            const config = {
+              type: 'bar',
+              data: data,
+              options: { 
+                indexAxis: 'y',
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                }
+            };
+          </script>
+          <script>
+            const myChart = new Chart(
+              document.getElementById('myChart'),
+              config
+            );
+          </script>
+           
+    </div>
 
 
-        
         <script src="js/vendor.js"></script>
         <script src="js/foundation.js"></script>
         <script type="application/javascript">
