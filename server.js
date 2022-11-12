@@ -83,9 +83,7 @@ app.get('/year/:selected_year', (req, res) => {
                //let country_table = '';
                let labels = '';
                let country_data = '';
-              
-               // --> 48 is the limit for bar chart - Issue : was the ' in one of the country names
-               //for (i = 1; count < 47; i++) {
+
                for (i = 0; i < rows.length; i++) {
 
                 // skip country combined by income rows
@@ -133,6 +131,12 @@ app.get('/year/:selected_year', (req, res) => {
 
                }
             
+               if(count == 0) {
+                res.write('ERROR: no data for ' + req.params.selected_year);
+                res.end();
+                return
+               }
+
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
                //response = response.replace('%%DATA%%', country_table);
@@ -248,7 +252,6 @@ app.get('/emissions/:income', (req, res) => {
                     }
                 }
 
-                
                 response = response.replace('%%YEAR%%', labels);
                 response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
                 response = response.replace('%%PREVIOUS%%', parseInt(value) - parseInt(1)); //previous button
