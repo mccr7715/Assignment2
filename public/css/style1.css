@@ -1,7 +1,29 @@
-h1{
-    color: #b35340;
-    background-color: #233342;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 450%;
+body {
+    background-color: rgb(182, 205, 207);
+    color: black;
     text-align: center;
 }
+
+button{
+    font-family:'Times New Roman', Times, serif;
+    font-size: 150%;
+    background-color: rgb(131, 149, 150);
+    padding: .5%;
+}
+
+h1{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 500%;
+    text-align: center;
+    text-decoration: underline;
+
+}
+
+a {
+    color: black;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 200%;
+    text-align: center;
+}
+a:visited{color: rgb(47, 79, 79)}
+a:hover, a:active{color: #FFFDD0;}
