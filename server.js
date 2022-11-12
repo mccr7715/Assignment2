@@ -228,7 +228,7 @@ app.get('/emissions/:income', (req, res) => {
                     name = 'High-income countries';
                     value = 4;
                 } else {
-                   // res.writeHead(404, {'Content-Type': 'text/plain'});
+                    res.writeHead(404, {'Content-Type': 'text/plain'});
                     res.write('ERROR: Emissions based on ' + req.params.income + ' income level was not found');
                     res.end();
                     return
