@@ -198,9 +198,14 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
+<<<<<<< HEAD
+        let query = 'SELECT Gasses.country, Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+=======
         let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+>>>>>>> a99b2814fd15260f6bab1174a7e05fad39610473
         
         db.all(query, (err, rows) => {
+            console.log(req.params.income);
             
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -222,11 +227,19 @@ app.get('/emissions/:income', (req, res) => {
                 response = response.replace('%%INCOME_LEVEL%%', name);
                 
 
+                // while(rows[i].country_code == 'HIC' || rows[i].country_code == 'UMC' || rows[i].country_code == 'LOC' || rows[i].country_code == 'LMC'){
+                //     i++;
+                // }
+
+                // if(rows[i].country_code == 'HIC') {
+                    
+                // }
+
                 let count = 0;
                 let labels='';
                 let country_data = '';
                 for(i=0; i<rows.length; i++) {
-                    if(rows[i].country = name) {
+                    while(rows[i].country == name) {
                         if (count == 0) {
                             labels = labels + rows[i].year;
                             country_data = country_data + rows[i].cumulative_co2;
@@ -236,8 +249,14 @@ app.get('/emissions/:income', (req, res) => {
                         }
                         console.log(labels);
                         count++;
+                        i++;
                     }
                 }
+
+                console.log(rows);
+                console.log(labels);
+                console.log(country_data);
+                console.log(count);
                 response = response.replace('%%YEAR%%', labels);
                 response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
                 //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
