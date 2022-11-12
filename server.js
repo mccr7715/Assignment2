@@ -81,7 +81,50 @@ app.get('/year/:selected_year', (req, res) => {
     });
 });
 
+app.get('/country/:selected_country', (req, res) => {
+    console.log(req.params.selected_country);
+    fs.readFile(path.join(template_dir, 'country_template.html'), (err, template) => {
+        // modify `template` and send response
+        // this will require a query to the SQL database
+        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
+        db.all(query, (err, rows) => {
+            console.log(err);
+            console.log(rows);
 
+            if(err) {
+                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.write('ERROR file not found');
+                res.end();
+            }
+
+            else if (rows.length == 0){
+                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.write('ERROR data not found for country ' + cid.toUpperCase());
+                res.end();
+            }
+            
+            else {
+                let response = template.toString();
+                response = response.replace('%%COUNTRY%%', rows[0].cid);
+
+                let location_table = '';
+                let i;
+
+                for(i=0; i < rows.length; i++){
+                    country_table = country_table + '<tr><td>' + rows[i].cid + '</td?';
+                    country_table = country_table + '<tr><td>' + rows[i].country_name + '</td?';
+
+                }
+
+                response = response.replace('%%COUNTRY_CODES%%', country_table);
+                res.status(200).type('html').send(response); // <-- you may need to change this
+            }
+
+        });
+       
+    });
+});
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
