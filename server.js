@@ -214,15 +214,20 @@ app.get('/emissions/:income', (req, res) => {
                 if(req.params.income == 'upper' || req.params.income == '3') {
                     name = 'Upper-middle-income countries';
                     value = 3;
-                } else if(req.params.income=='low' || req.params.income == '1') {
+                } else if(req.params.income=='low' || req.params.income == '1' || req.params.income=='5') {
                     name = 'Low-income countries';
                     value = 1;
                 } else if(req.params.income == 'lower' || req.params.income == '2') {
                     name = 'Lower-middle-income countries';
                     value = 2;
-                } else {
+                } else if(req.params.income == 'high' || req.params.income=='4' || req.params.income=='0') {
                     name = 'High-income countries';
                     value = 4;
+                } else {
+                   // res.writeHead(404, {'Content-Type': 'text/plain'});
+                    res.write('ERROR: Emissions based on ' + req.params.income + ' income level was not found');
+                    res.end();
+                    return
                 }
                 response = response.replace('%%INCOME_LEVEL%%', name);
                 
