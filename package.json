@@ -22,8 +22,8 @@
         "url": "https://github.com/mccr7715/Assignment2.git"
     },
     "dependencies": {
+        "chart.js": "^3.9.1",
         "express": "^4.18.2",
         "sqlite3": "^5.1.2"
     }
 }
-

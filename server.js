@@ -32,25 +32,30 @@ app.use(express.static(public_dir));
 
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
-    let home = '/emissions/high'; // <-- change this *** FIX THIS
+    let home = '/home.html'; // <-- change this *** FIX THIS
     res.redirect(home);
 });
 
-
-// Example GET request handler for data about a specific year
-app.get('/year/:selected_year', (req, res) => {
-    console.log(req.params.selected_year);
-    fs.readFile(path.join(template_dir, 'year.html'), (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
-
-        res.status(200).type('html').send(template); // <-- you may need to change this
+// GET request handler for home.html
+app.get('/home.html', (req, res) => {
+    fs.readFile('home.html', (err, template) => {
+        res.status(200).type('html').send(template); 
     });
 });
 
+// // Example GET request handler for data about a specific year
+// app.get('/year/:selected_year', (req, res) => {
+//     console.log(req.params.selected_year);
+//     fs.readFile(path.join(template_dir, 'year.html'), (err, template) => {
+//         // modify `template` and send response
+//         // this will require a query to the SQL database
+
+//         res.status(200).type('html').send(template); // <-- you may need to change this
+//     });
+// });
 
 
-//GET request handler for CO2 levels of all countries in specified year - Maddie
+// GET request handler for CO2 levels of all countries in specified year - Maddie
 app.get('/year/:selected_year', (req, res) => {
     console.log(req.params.selected_year);
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
@@ -126,7 +131,7 @@ app.get('/year/:selected_year', (req, res) => {
                
                console.log(labels);
                console.log(country_data);
-                res.status(200).type('html').send(response); // <-- you may need to change this
+               res.status(200).type('html').send(response); // <-- you may need to change this
             }
 
         });
