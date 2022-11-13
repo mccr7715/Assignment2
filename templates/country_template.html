@@ -20,41 +20,13 @@
 
     <h1>CO2 Levels in a Country Over Time %%COUNTRY%%</h1>
 
-    <div class="grid-container">
+    <!--<div class="grid-container">
         <div class="grid-x grid-padding-x">
           <div class="cell large-6"><a href="http://localhost:8000/year/%%PREVIOUS%%">previous</a></div>
           <div class="cell large-6"><a href="http://localhost:8000/year/%%NEXT%%">next</a></div>
         </div>
-      </div>
+      </div>-->
 
-      <table>
-        <tbody>
-          <!--%%DATA%%-->
-        </tbody>
-      </table>
-
-    <div id="content">
-        <!-- <img id="country_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" /> -->
-        <h1 id="country_name">%%COUNTRY%%</h1>
-        <div class="clear"></div>
-        <table>
-            <thead>
-                <tr>
-                </tr>
-            </thead>
-            <tbody>
-                %%COUNTRY_INFO%% <!-- example for mapping -->
-            </tbody>
-        </table>
-</body>
-</html>
-
-
-  <table>
-    <tbody>
-      <!--%%DATA%%-->
-    </tbody>
-  </table>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <canvas id="myChart" height="1000"></canvas>
@@ -85,7 +57,7 @@
             display: false
         }
         },
-    indexAxis: 'y',
+    indexAxis: 'x',
         scales: {
         y:{
             offset:true,
@@ -101,6 +73,20 @@
     <script type="application/javascript">
     $(document).foundation();
     </script>
-</body>
 
+
+   <!--<div id="content">
+       <img id="country_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" /> 
+        <h1 id="country_name">%%COUNTRY%%</h1>
+        <div class="clear"></div>
+        <table>
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+                %%COUNTRY_INFO%% example for mapping 
+            </tbody>
+        </table> -->
+</body>
 </html>
