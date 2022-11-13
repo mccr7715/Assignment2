@@ -83,9 +83,7 @@ app.get('/year/:selected_year', (req, res) => {
                //let country_table = '';
                let labels = '';
                let country_data = '';
-              
-               // --> 48 is the limit for bar chart - Issue : was the ' in one of the country names
-               //for (i = 1; count < 47; i++) {
+
                for (i = 0; i < rows.length; i++) {
 
                 // skip country combined by income rows
@@ -133,6 +131,12 @@ app.get('/year/:selected_year', (req, res) => {
 
                }
             
+               if(count == 0) {
+                res.write('ERROR: no data for ' + req.params.selected_year);
+                res.end();
+                return
+               }
+
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
                //response = response.replace('%%DATA%%', country_table);
@@ -199,7 +203,7 @@ app.get('/country/:selected_country', (req, res) => {
 
 app.get('/emissions/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income_template.html'), (err, template) => {
-        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country, Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         
         db.all(query, (err, rows) => {
             
@@ -211,39 +215,48 @@ app.get('/emissions/:income', (req, res) => {
 
                 let response = template.toString();
                 let name = '';
-                if(req.params.income == 'upper') {
+                let value;
+                if(req.params.income == 'upper' || req.params.income == '3') {
                     name = 'Upper-middle-income countries';
-                } else if(req.params.income=='low') {
+                    value = 3;
+                } else if(req.params.income=='low' || req.params.income == '1' || req.params.income=='5') {
                     name = 'Low-income countries';
-                } else if(req.params.income == 'lower') {
+                    value = 1;
+                } else if(req.params.income == 'lower' || req.params.income == '2') {
                     name = 'Lower-middle-income countries';
-                } else {
+                    value = 2;
+                } else if(req.params.income == 'high' || req.params.income=='4' || req.params.income=='0') {
                     name = 'High-income countries';
+                    value = 4;
+                } else {
+                    res.writeHead(404, {'Content-Type': 'text/plain'});
+                    res.write('ERROR: Emissions based on ' + req.params.income + ' income level was not found');
+                    res.end();
+                    return
                 }
                 response = response.replace('%%INCOME_LEVEL%%', name);
                 
-
                 let count = 0;
                 let labels='';
                 let country_data = '';
                 for(i=0; i<rows.length; i++) {
-                    if(rows[i].country = name) {
+                    while(rows[i].country == name) {
                         if (count == 0) {
                             labels = labels + rows[i].year;
                             country_data = country_data + rows[i].cumulative_co2;
-                            console.log(rows[i].year);
                         } else {
-                            console.log(rows[i]);
                             labels =labels +  "', '" + rows[i].year;
                             country_data = country_data +   ", " + rows[i].cumulative_co2;
                         }
                         count++;
+                        i++;
                     }
                 }
+
                 response = response.replace('%%YEAR%%', labels);
                 response = response.replace("'%%COUNTRY_DATA%%'",  country_data);
-                //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
-               // response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
+                response = response.replace('%%PREVIOUS%%', parseInt(value) - parseInt(1)); //previous button
+                response = response.replace('%%NEXT%%', parseInt(value) + parseInt(1)); //next button
                 res.status(200).type('html').send(response);
             }
         });
