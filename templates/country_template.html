@@ -20,16 +20,16 @@
 
     <h1>CO2 Levels in a Country Over Time %%COUNTRY%%</h1>
 
-    <!--<div class="grid-container">
+  <!--   <div class="grid-container">
         <div class="grid-x grid-padding-x">
-          <div class="cell large-6"><a href="http://localhost:8000/year/%%PREVIOUS%%">previous</a></div>
-          <div class="cell large-6"><a href="http://localhost:8000/year/%%NEXT%%">next</a></div>
+          <div class="cell large-6"><a href="http://localhost:8000/country/%%PREVIOUS%%">previous</a></div>
+          <div class="cell large-6"><a href="http://localhost:8000/country/%%NEXT%%">next</a></div>
         </div>
-      </div>-->
+      </div> -->
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <canvas id="myChart" height="1000"></canvas>
+    <canvas id="myChart" height="800"></canvas>
     <script>
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, { 

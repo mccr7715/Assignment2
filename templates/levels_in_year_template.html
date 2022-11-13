@@ -16,7 +16,8 @@
     <div class="grid-x grid-padding-x">
       <div class="cell large-3"><a href="http://localhost:8000/">Home</a></div>
       <div class="cell large-3"><a href="http://localhost:8000/country/AFG">CO2 Levels in a Country Over Time</a></div>
-      <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div><!--start at recent and work back-->
+      <div class="cell large-3"><a href="http://localhost:8000/year/2020">CO2 Levels in Countries by Year</a></div>
+      <!--start at recent and work back-->
       <div class="cell large-3"><a href="http://localhost:8000/emissions/high">CO2 Levels by Country Income</a></div>
     </div>
   </div>
@@ -32,51 +33,63 @@
   </div>
 
 
-  <table>
-    <tbody>
-      <!--%%DATA%%-->
-    </tbody>
-  </table>
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="cell large-11"> <canvas id="myChart" height="1500"></canvas></div>
+      <div class="cell large-1">
+        <table>
+          <tbody>
+            %%DATA%%
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
- 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <canvas id="myChart" height="1500"></canvas>
-    <script>
-      const ctx = document.getElementById('myChart');
-      const myChart = new Chart(ctx, { 
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    const ctx = document.getElementById('myChart');
+    const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         // the chart.js replacement occurs HERE ----------------------------------------------------
         labels: labels = ['%%COUNTRIES%%'],
         datasets: [{
-            label: 'CO2 in countries',
-            // and HERE -----------------------------------------------------------------------
-            data: ['%%COUNTRY_DATA%%'],
-            backgroundColor: [
+          label: 'CO2 in countries',
+          // and HERE -----------------------------------------------------------------------
+          data: ['%%COUNTRY_DATA%%'],
+          backgroundColor: [
             'rgb(81, 189, 201)'
-            ],
-            borderColor: [
+          ],
+          borderColor: [
             'rgb(81, 189, 201)'
-            ],
-            borderWidth: 1
+          ],
+          borderWidth: 1
         }]
-        
-    },
-    options: {
-      plugins: {
-         legend: {
-            display: false
-         }
+
       },
-      indexAxis: 'y',
-      scales: {
-        y:{
-          offset:true,
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        indexAxis: 'y',
+        scales: {
+          y: {
+            offset: true,
+          }
         }
       }
-    }
-  
-  });
+
+    });
   </script>
 
   <script src="js/vendor.js"></script>

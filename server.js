@@ -62,7 +62,7 @@ app.get('/year/:selected_year', (req, res) => {
     fs.readFile(path.join(template_dir, 'levels_in_year_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country, Gasses.country_code, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, (err, rows) => {
             console.log(err);
@@ -80,13 +80,13 @@ app.get('/year/:selected_year', (req, res) => {
                
 
                let count = 0;
-               //let country_table = '';
+               let country_table = '';
                let labels = '';
                let country_data = '';
 
                for (i = 0; i < rows.length; i++) {
 
-                // skip country combined by income rows
+                // skip the country combined by income rows
                 while(rows[i].country_code == 'HIC' || rows[i].country_code == 'UMC' || rows[i].country_code == 'LOC' || rows[i].country_code == 'LMC'){
                     i++;
                 }
@@ -95,8 +95,8 @@ app.get('/year/:selected_year', (req, res) => {
 
                     // just here to see if the right information is print - check values__________
                     
-            //        country_table = country_table + '<tr><td>' + rows[i].country_code + '</td>';
-            //        country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
+                    country_table = country_table + '<tr><td>' + rows[i].country + '</td>';
+                    country_table = country_table + '<td>' + rows[i].cumulative_co2 + '</td></tr>';
                     // ___________________________________________________________________________
 
                     //This is the part that replaces the script in chart.js
@@ -139,7 +139,7 @@ app.get('/year/:selected_year', (req, res) => {
 
                response = response.replace('%%COUNTRIES%%',  labels);
                response = response.replace("'%%COUNTRY_DATA%%'",  country_data);  // <--- HERE ------------------------> !!!
-               //response = response.replace('%%DATA%%', country_table);
+               response = response.replace('%%DATA%%', country_table);
                response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
                response = response.replace('%%NEXT%%', parseInt(req.params.selected_year) + parseInt(1)); //next button
                //console.log(labels);
@@ -160,14 +160,13 @@ app.get('/country/:selected_country', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         var done = false;
-        let prevIdx;
-        let nextIdx;
+
         let response = template.toString();
-        let query = 'SELECT Gasses.country_code as selected_country, Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.country_code = ?';
+        let query = 'SELECT Gasses.country_code AS selected_country, Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.country_code = ?';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, [cid], (err, rows) => {
            // console.log(err);
-           // console.log(rows);
+           //console.log(rows);
 
             if(err) {
                 res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -214,10 +213,9 @@ app.get('/country/:selected_country', (req, res) => {
                             countries_data = countries_data +   ", " + rows[i].cumulative_co2;
                         }
                         country_count++;
-                        i++;
                     }
-                
 
+                   
 
                // console.log(country_labels);
               //  console.log(countries_data);
@@ -251,13 +249,25 @@ app.get('/country/:selected_country', (req, res) => {
                     }
                     done = true;
                 });*/
-                
+
+
+               
+                let prevIdx = 0;
+                let nextIdx = 0;
+               // while(rows[i].selected_country == rows[prevIdx].selected_country) {
+
+               // }
+
+                //response = response.replace('%%PREVIOUS%%', parseInt(req.params.selected_year) - parseInt(1)); //previous button
+               // response = response.replace('%%NEXT%%', rows[parseInt(country_count+1)].selected_country); //next button
+
+
 
                 console.log(country_labels);
                         console.log(countries_data);
 
                 //response = response.replace('%%COUNTRY_CODES%%', country_table);
-                response = response.replace('%%COUNTRY_DATA%%', countries_data);
+                response = response.replace("'%%COUNTRY_DATA%%'", countries_data);
                 response = response.replace('%%COUNTRIES%%', country_labels);
                 res.status(200).type('html').send(response); // <-- you may need to change this
 

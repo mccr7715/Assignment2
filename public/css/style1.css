@@ -4,6 +4,24 @@ body {
     text-align: center;
 }
 
+table, th, td, tr, tbody{
+    background-color: rgb(182, 205, 207);
+    color: slategray;
+    padding: 0px;
+    text-align: center;
+    margin: 0px;
+    border-collapse: collapse;
+    font-size: 90%;
+    border-spacing: 0;
+    
+    
+}
+
+tr{
+    height: 0;
+}
+
+
 p{
     font-size: 200%;
 }
