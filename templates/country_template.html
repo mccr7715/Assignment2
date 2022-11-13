@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Country</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style1.css">
 </head>
 <body>
 
@@ -33,17 +33,12 @@
       </table>
 
     <div id="content">
-        <img id="country_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />
+        <!-- <img id="country_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" /> -->
         <h1 id="country_name">%%COUNTRY%%</h1>
         <div class="clear"></div>
         <table>
             <thead>
                 <tr>
-                    <th class="country">Country</th>
-                    <th>emissions</th>
-                    <th>regular Co2</th>
-                    <th>cumulative Co2</th>
-                    <th>code</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +60,7 @@
     <script>
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, { 
-        type: 'bar',
+        type: 'line',
         data: {
         // the chart.js replacement occurs HERE ----------------------------------------------------
         labels: labels = ['%%COUNTRIES%%'],

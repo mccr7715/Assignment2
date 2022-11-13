@@ -155,12 +155,13 @@ app.get('/year/:selected_year', (req, res) => {
 //Carynn country route
 app.get('/country/:selected_country', (req, res) => {
     console.log(req.params.selected_country);
+    let cid = req.params.selected_country;
     fs.readFile(path.join(template_dir, 'country_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses';
+        let query = 'SELECT Gasses.country_code, Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.country_code = ?';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
-        db.all(query, (err, rows) => {
+        db.all(query, [cid], (err, rows) => {
             console.log(err);
             console.log(rows);
 
@@ -179,18 +180,30 @@ app.get('/country/:selected_country', (req, res) => {
             
             else {
                 let response = template.toString();
-                response = response.replace('%%COUNTRY%%', rows[0].cid);
+                response = response.replace('%%COUNTRY%%', rows[0].country);
+                response = response.replace('%%COUNTRY%%', rows[0].country);
 
-                let location_table = '';
-                let i;
+                let count = 0;
+                let labels = '';
+                let country_data = '';
 
                 for(i=0; i < rows.length; i++){
-                    country_table = country_table + '<tr><td>' + rows[i].cid + '</td?';
-                    country_table = country_table + '<tr><td>' + rows[i].country_name + '</td?';
-
+                    //country_table = country_table + '<tr><td>' + rows[i].cid + '</td?';
+                    //country_table = country_table + '<tr><td>' + rows[i].country + '</td?';
+                    if (i == 0){
+                        labels = labels + rows[i].year.toString();
+                        country_data = country_data + rows[i].cumulative_co2;
+                    } else {
+                        labels = labels + "', '" + rows[i].year.toString();
+                        country_data = country_data + ", " + rows[i].cumulative_co2;
+                    }
                 }
 
-                response = response.replace('%%COUNTRY_CODES%%', country_table);
+                console.log(labels);
+                console.log(country_data);
+                //response = response.replace('%%COUNTRY_CODES%%', country_table);
+                response = response.replace('%%COUNTRY_DATA%%', labels);
+                response = response.replace('%%COUNTRIES%%', country_data);
                 res.status(200).type('html').send(response); // <-- you may need to change this
             }
 
