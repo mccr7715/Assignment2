@@ -159,6 +159,10 @@ app.get('/country/:selected_country', (req, res) => {
     fs.readFile(path.join(template_dir, 'country_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        var done = false;
+        let prevIdx;
+        let nextIdx;
+        let response = template.toString();
         let query = 'SELECT Gasses.country_code, Gasses.country, Gasses.year, Gasses.co2, Gasses.cumulative_co2 FROM Gasses WHERE Gasses.country_code = ?';
         //db.all(query, [parseFloat(req.params.selected_year)], (err, rows) => {
         db.all(query, [cid], (err, rows) => {
@@ -179,7 +183,7 @@ app.get('/country/:selected_country', (req, res) => {
             }
             
             else {
-                let response = template.toString();
+                
                 response = response.replace('%%COUNTRY%%', rows[0].country);
                 response = response.replace('%%COUNTRY%%', rows[0].country);
 
@@ -187,7 +191,7 @@ app.get('/country/:selected_country', (req, res) => {
                 let labels = '';
                 let country_data = '';
 
-                for(i=0; i < rows.length; i++){
+                /* for(i=0; i < rows.length; i++){
                     //country_table = country_table + '<tr><td>' + rows[i].cid + '</td?';
                     //country_table = country_table + '<tr><td>' + rows[i].country + '</td?';
                     if (i == 0){
@@ -197,17 +201,66 @@ app.get('/country/:selected_country', (req, res) => {
                         labels = labels + "', '" + rows[i].year.toString();
                         country_data = country_data + ", " + rows[i].cumulative_co2;
                     }
+                } */
+
+                let country_count = 0;
+                let country_labels='';
+                let countries_data = '';
+                for(i=0; i<rows.length; i++) {
+                    while(rows[i].country == req.params.selected_country) {
+                        if (country_count == 0) {
+                            country_labels = country_labels + rows[i].year;
+                            countries_data = countries_data + rows[i].cumulative_co2;
+                        } else {
+                            country_labels = country_labels +  "', '" + rows[i].year;
+                            countries_data = countries_data +   ", " + rows[i].cumulative_co2;
+                        }
+                        count++;
+                        i++;
+                    }
                 }
 
-                console.log(labels);
-                console.log(country_data);
-                //response = response.replace('%%COUNTRY_CODES%%', country_table);
-                response = response.replace('%%COUNTRY_DATA%%', labels);
-                response = response.replace('%%COUNTRIES%%', country_data);
-                res.status(200).type('html').send(response); // <-- you may need to change this
-            }
 
-        });
+                console.log(country_labels);
+                console.log(countries_data);
+                let query2 = 'SELECT Gasses.country_code FROM Gasses';
+                db.all(query2, [req.params.selected_country], (err, rows2) => {
+                    let i = 0;
+                    console.log(rows2);
+                    console.log("selected_country: "+rows[i].country_code);
+                    while(!(req.params.selected_country == rows[i].country_code)&& i < rows.length)
+                    {i++
+
+                    };
+
+                    if(i == 0){
+                        prevIdx = rows.length - 1;
+                        nextIdx = 1;
+                    }
+                    else if(i == rows.length - 1){
+                        prevIdx = i-1;
+                        nextIdx = 0;
+                    }
+                    else{
+                        prevIdx = i-1;
+                        nextIdx = i+1;
+                    }
+
+                    if(done){
+                        response = response.replace('%%PREVIOUS%%', rows[prevIdx].country_code);
+                        response = response.replace('%%NEXT%%', rows[nextIdx].country_code);
+                        //res.status(200).type('html').send(response);
+                    }
+                    done = true;
+                });
+                
+
+                //response = response.replace('%%COUNTRY_CODES%%', country_table);
+                response = response.replace('%%COUNTRY_DATA%%', country_labels);
+                response = response.replace('%%COUNTRIES%%', countries_data);
+                res.status(200).type('html').send(response); // <-- you may need to change this
+
+        }});
        
     });
 });
